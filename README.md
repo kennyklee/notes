@@ -1,5 +1,7 @@
 ##Design Resources
 * [SVG Icons - https://thenounproject.com/](https://thenounproject.com/)
+* [SVG Workflow - http://www.grunticon.com/](http://www.grunticon.com/)
+* [SVG - Covert SVG to chunks of code](http://www.grumpicon.com/)
 
 
 ##HTML5
