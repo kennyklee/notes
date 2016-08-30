@@ -923,3 +923,33 @@ for (let value of tree) {
 
 console.log(values);
 ```
+
+## PROMISES
+3 states
+* pending/unresolved (status)
+* resolve (status)
+    * then (callback)
+* reject (status)
+    * catch (callback)
+
+``` JavaScript
+promise = new Promise((resolve, reject) => {
+    resolve(); //Or resolve().  These are native functions.
+});
+
+// Only callled when resolved.  My preferred formatting
+promise
+    .then(() => {
+        console.log('finally finished!');
+    })
+    .then(() => {
+        console.log('also ran...second callback');
+    })
+
+// Same above refactored
+promise
+    .then(() => console.log('finally finished!'))
+    .then(() => console.log('also ran...second callback'))
+    .catch(() => console.log('uh oh!!')) // only runs on reject();
+
+```
