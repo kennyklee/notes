@@ -926,6 +926,7 @@ console.log(values);
 
 ## PROMISES
 3 states
+
 * pending/unresolved (status)
 * resolve (status)
     * then (callback)
@@ -951,5 +952,24 @@ promise
     .then(() => console.log('finally finished!'))
     .then(() => console.log('also ran...second callback'))
     .catch(() => console.log('uh oh!!')) // only runs on reject();
+```
 
+#### Most common use case with 'fetch'
+
+``` JavaScript
+url = 'https://jsonplaceholder.typicode.com/posts/';
+
+fetch(url) // Promise comes back with 'pending' status.
+    .then(response => response.json()) //This is a complaint.  Recommend Axio, SuperAgent
+    .then(data => console.log(data));
+
+// show a weakness in fetch
+fetch(url)
+    .then(respnse => console.log(response))
+    .catch(error => console.log('BAD', error));
+
+// With fetch any status code above 300 does NOT trigger an error.
+// fetch/catch applies only if the url is completely bad, does not resolve at all.
+
+// User Axios, SuperAgent
 ```
