@@ -3,20 +3,6 @@
 * [JavaSCript: Helper Functions](#js_helper_functions)
 * [JavaScript: ES6](#javascript_-_es6)
 
-# Design Resources
-* [SVG Icons - https://thenounproject.com/](https://thenounproject.com/)
-* [SVG Workflow - http://www.grunticon.com/](http://www.grunticon.com/)
-* [SVG - Covert SVG to chunks of code](http://www.grumpicon.com/)
-* [SVG - Downloads](http://www.vecteezy.com)
-* http://creativedroplets.com/export-svg-for-the-web-with-illustrator-cc
-* https://css-tricks.com/flat-icons-icon-fonts/
-
-# HTML5
-* [http://html5hub.com/](http://html5hub.com)
-
-# Tools
-* [Run Marked2 from the Command Line](http://jblevins.org/log/marked-2-command)
-
 # How to read source code
 ### Why it’s important
 
@@ -66,13 +52,37 @@
 1. Capture notes.
 2. More notes.
 
+# JS: 'this' keyword
+1. Default:
+`this` will be window.
 
+2. In a method:
+`this` will point to the object method is on.
+but once you go into another function,
+this will default back to window.
+
+3. Explicitly define `this`.
+Use `bind`, `apply`, `call`.
+
+4. When passing in a callback function, value of `this`
+inside callback depends on whether the outer function
+explicitly sets a `this` value. If not,
+it'll default to window.
+
+5. Constructors
+`this` points to the newly created object.
 
 # JS: Array Iterator Methods
-``` JavaScript
-var array = [1,2,3,4];
 
-// ADD / REMOVE
+```c
+var test = function() {};
+asdf
+// wow pretty cool.
+```
+
+```c
+var array = [1,2,3,4];
+// ADD & REMOVE
 array.push(5); // [1,2,3,4,5]
 array.pop(); // [1,2,3]
 array.shift(); // [2,3,4];
@@ -98,7 +108,6 @@ array.reverse(); [4,3,2,1,"old"] - modifies existing array
 var newArray = ['join', 'me'];
 array.concat(newArray); // ['old',1,2,3,4,'join','me']
 array.join('-'); // old-1-2-3-4
-
 ```
 
 # JS: Helper functions
@@ -112,7 +121,7 @@ array.join('-'); // old-1-2-3-4
 * Can replace the "for" loop.
 * All other helpers can be reimplemented using the forEach.
 
-``` JavaScript
+```c
 var colors = [ 'red', 'blue', 'green' ];
 
 // Traditional 'for' loop
@@ -154,7 +163,7 @@ sum;
 
 #### Example #1
 
-``` JavaScript
+```c
 var numbers = [1,2,3];
 
 // Make original arrary immutable, and create a new array.
@@ -182,7 +191,7 @@ doubled;
 ```
 
 #### Example #2
-``` JavaScript
+```c
 var cars = [
   { model: 'Buick', price: 'CHEAP' },
   { model: 'Camaro', price: 'expensive' }
@@ -203,7 +212,8 @@ prices;
 * Do not forget the 'return' statement.
 
 #### Example #1
-``` JavaScript
+```c
+
 var products = [
   { name: 'cucumber', type: 'vegetable' },
   { name: 'banana', type: 'fruit' },
@@ -226,7 +236,7 @@ console.log(filteredProducts2);
 ```
 
 #### Example #1
-``` JavaScript
+```c
 var products = [
   { name: 'cucumber', type: 'vegetable', quantity: 0, price: 1 },
   { name: 'banana', type: 'fruit', quantity: 10, price: 15 },
@@ -247,7 +257,7 @@ console.log(filteredProducts);
 ```
 #### Read-life example
 !["Filter" function diagram](http://d.weblife.us/147xW+ "filter function")
-``` JavaScript
+```c
 var post = { id: 4, title: 'New Post' };
 var comments = [
   { postId: 4, content: 'awesome post' },
@@ -274,7 +284,7 @@ console.log(filteredComments);
 !["Find" function diagram](http://d.weblife.us/1c8yv+ "find function")
 
 #### Example 1
-``` JavaScript
+```c
 var users = [
   { name: 'Jill' },
   { name: 'Alex' },
@@ -298,7 +308,7 @@ var findUser = users.find(function(user) {
 console.log(findUser);
 ```
 #### Example 2
-```
+```c
 function Car(model){
   this.model = model;
 }
@@ -315,7 +325,7 @@ cars.find(function(car) {
 ```
 
 #### Example 3
-```
+```c
 var posts = [
   { id: 1, title: 'New Post'},
   { id: 2, title: 'Old Post'}
@@ -348,7 +358,7 @@ Think of '||' operator.
 !["Some" function diagram](http://d.weblife.us/EVfK+ "some function")
 See example below.
 
-``` JavaScript
+```c
 var computers = [
   { name: 'Apple', ram: 24 },
   { name: 'Compaq', ram: 4 },
@@ -387,7 +397,7 @@ computers.some(function(computer) {
 !["reduce" function diagram](http://d.weblife.us/rKXm+ "reduce function")
 See example below.
 
-``` JavaScript
+```c
 var numbers = [ 10, 20, 30 ];
 var sum = 0;
 
@@ -403,7 +413,7 @@ numbers.reduce(function(sum, numbers){ // sum is the intital value, and numbers 
 
 ```
 
-```
+```c
 var primaryColors = [
   { color: 'red' },
   { color: 'yellow' },
@@ -422,7 +432,7 @@ COMMON whiteboard question: Are the paranthese balanced?
 "(()" // NO
 ")(" // NO
 
-``` JavaScript
+```c
 function balancedParens(string) {
   return !string.split("").reduce(function(previous, char) { //'!' turns it into boolean
     if (previous < 0) { return previous; }
@@ -437,14 +447,18 @@ function balancedParens(string) {
 Write a function called 'unique' that will remove all the duplicate values from an array.
 
 For example, given the following array:
-```var numbers = [1, 1, 2, 3, 4, 4];```
+
+```c
+var numbers = [1, 1, 2, 3, 4, 4];
+```
+
 Your function should return
-```[1, 2, 3, 4]```
+`[1, 2, 3, 4]`
 Hint: Use the 'reduce' and 'find' helpers.
 
 3 different solutions below. The last 'indexOf' is the preferred way.
 
-``` JavaScript
+```c
 function unique(array) {
  return array.reduce(function(newArray,number){
      if(newArray.includes(number) === false) {
@@ -482,8 +496,45 @@ function unique(array) {
 
 ## LET & CONSTANT
 * It's more legible.  Easy to eye/see/understand which variables change, and which don't.
-* Both are block scoped.  Different than ES5.
-* 'constant' is immutable.  Cannot be changed once defined.
+* `let` and `const` are block scoped.  Different than ES5.
+
+```c
+if  (x > 0){
+  let y;
+  let const;
+}
+<!-- cannot access `let` or `const` -->
+```
+
+* `constant` is immutable.  Cannot be reassigned once defined.  However, the properties of `constant` can be changed.  e.g., `const person; person.age = '30';`
+* If need to completely make immutable, include properties, then use `const me = Object.freeze(person);`
+* This 1st code snippet won't work as expected.  Use the 2nd snippet with `let` to make it work.
+
+```c
+for(var i = 0; i < 10; i++) {
+  console.log(i);
+  setTimeout(function() {
+      console.log('The number is ' + i);
+    }, 1000)
+}
+
+<!-- To fix this, use `let` -->
+
+for(let i = 0; i < 10; i++) {
+  console.log(i);
+  setTimeout(function() {
+      console.log('The number is ' + i);
+    }, 1000)
+}
+```
+* Hoisting difference:
+```c
+console.log(person);  undefined
+var person = 'Kenny';
+
+console.log(person2);  Uncaught ReferenceError: person2 is not defined
+let person2 = 'Kenny';  same with `const`
+```
 
 ## TEMPLATE STRINGS
 * Wrap in backticks \` blah blah \`
@@ -494,7 +545,7 @@ function unique(array) {
 ## ARROW FUNCTIONS (Syntatic sugar)
 #### Fat arrow functions
 
-``` JavaScript
+```c
 // ES5
 const add = function(a, b) {
   return a + b;
@@ -533,7 +584,7 @@ const isEngineer = ({ title, department }) => title === 'Engineer' && department
 
 ## DEFAULT FUNCTION ARGUMENTS
 
-``` JavaScript
+```c
 function ajaxRequest(url, method = 'GET') {
   // logic to make request
 }
@@ -545,7 +596,7 @@ ajaxRequest('google.com', 'POST'); // method is 'POST'
 
 ## REST & SPREAD OPERATOR
 
-``` JavaScript
+```c
 // REST OPERATOR
 function addNumbers(...numbers) { //Turns the arguments into an array
   return numbers.reduce((sum, number) => {
@@ -589,7 +640,7 @@ MathLibrary.calculateProduct(2, 3);
 
 ## DESTRUCTURING
 
-``` JavaScript
+```c
 var expense = {
   type: 'Business',
   amount: '$45 USD'
@@ -632,15 +683,16 @@ const companies = {
 // Gets first variable, then destructures.
 const [{ location }] = companies; //'Mountain View'
 ```
+
 ####Real-life examples
-```
+
+```c
 // Destructured and the ORDER of arguments do not matter anymore.
 function signup({ username, password, email, dateOfBirth, city }) {
   //create new user
 }
 
-// other code
-// other code
+
 // other code
 
 const user = {
@@ -649,6 +701,7 @@ const user = {
   email: 'myemail@example.com',
   dateOfBirth: '1/1/1900',
   city: 'New York'
+};
 
 signup(user);
 
@@ -666,7 +719,7 @@ const point = [
   {x: 4, y: 5},
   {x: 10, y: 1},
   {x: 0, y: 40}
-]
+];
 
 // Solution
 points.map(([x, y]) => {
@@ -693,7 +746,7 @@ const classesAsObject = classes.map(([subject, time, teacher]) => ({subject, tim
 ## CLASSES
 ####ES5 Example
 
-```
+```c
 function Car(options) {
   this.title = options.title;
 }
@@ -722,7 +775,7 @@ console.log(toyota.honk());
 
 ####ES6 Example
 
-```
+```c
 class Car {
   constructor({ title }) {
     this.title = title;
@@ -757,7 +810,7 @@ console.log(toyota);
 ## GENERATORS
 Functions where we can enter and exit multiple times.
 When you declare a function, we use the star.
-```
+```c
 function* shopping() {
   // stuff on the sidewalk
 
@@ -941,7 +994,7 @@ console.log(names);
 
 #### Real-world example
 Using reddit comment tree as an example
-```
+```c
 class Comment {
   constructor(content, children) {
     this.content = content;
@@ -984,7 +1037,7 @@ console.log(values);
 * reject (status)
     * catch (callback)
 
-``` JavaScript
+```c
 promise = new Promise((resolve, reject) => {
     resolve(); //Or resolve().  These are native functions.
 });
@@ -1007,7 +1060,7 @@ promise
 
 #### Most common use case with 'fetch'
 
-``` JavaScript
+```c
 url = 'https://jsonplaceholder.typicode.com/posts/';
 
 fetch(url) // Promise comes back with 'pending' status.

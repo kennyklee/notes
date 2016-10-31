@@ -11,6 +11,7 @@ git branch -d [local]
 
 # Delete Remote
 git push origin --delete [branchname]
+git remote prune origin //Gets rid of old remote branches that is still referenced locally
 
 # Set Remote URL
 git remote set-url origin [https://...]
