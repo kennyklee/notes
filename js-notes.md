@@ -53,24 +53,20 @@
 2. More notes.
 
 # JS: 'this' keyword
-1. Default:
-`this` will be window.
+1. **Default:**
+In a regular function, `this` points to the `window` object.
 
-2. In a method:
-`this` will point to the object method is on.
-but once you go into another function,
-this will default back to window.
+1. **In a method:**
+`this` points to the object that contains the method. For example, if you run `myObject.myMethod()`, `this` points to `myObject`. However, other functions called in the body of `myObject.myMethod` will revert back to the default case.
 
-3. Explicitly define `this`.
-Use `bind`, `apply`, `call`.
+1. **Callback:**
+In a callback function, assume the default case unless the outer function explicitly sets `this` (see the last rule).
 
-4. When passing in a callback function, value of `this`
-inside callback depends on whether the outer function
-explicitly sets a `this` value. If not,
-it'll default to window.
+1. **Constructors:**
+In a function that's being called as a constructor, `this` points to the object that the constructor will create and return.
 
-5. Constructors
-`this` points to the newly created object.
+1. **Explicitly define `this`:**
+When you explicitly set the value of `this` manually using `bind`, `apply`, or `call`, it's all up to you.
 
 # JS: Array Iterator Methods
 
