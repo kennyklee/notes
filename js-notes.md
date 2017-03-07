@@ -491,6 +491,11 @@ function unique(array) {
 # JavaScript - ES6
 
 ## LET & CONSTANT
+#### When to use `var` vs `let` vs `const`
+* use `const` by default
+* only use `let` if rebinding is needed
+* `var` shouldn't be used in ES6
+
 * It's more legible.  Easy to eye/see/understand which variables change, and which don't.
 * `let` and `const` are block scoped.  Different than ES5.
 
@@ -531,6 +536,10 @@ var person = 'Kenny';
 console.log(person2);  Uncaught ReferenceError: person2 is not defined
 let person2 = 'Kenny';  same with `const`
 ```
+
+## Temporal Dead Zone
+* `var` is hoisted to the top
+* `let` and `cost` are not hoisted above the function that calls them. Calling them before they are defined is called the 'temporal dead zone'.
 
 ## TEMPLATE STRINGS
 * Wrap in backticks \` blah blah \`
@@ -577,6 +586,32 @@ const isEngineer = ({ title, department }) => title === 'Engineer' && department
 
 * Fat arrow functions also solves the 'this' context binding issues.
 * It uses 'lexical this'.
+
+``` c
+const names = ['wes', 'kait', 'lux'];
+
+const fullNames = names.map(function(name) {
+  return `${name} bos`;
+});
+
+const fullNames2 = names.map((name) => {
+  return `${name} bos`;
+});
+
+const fullNames3 = names.map(name => {
+  return `${name} bos`;
+});
+
+const fullNames4 = names.map(name => `${name} bos`);
+
+const fullNames5 = names.map(() => `cool bos`);
+
+const sayMyName = (name) => {
+  alert(`Hello ${name}!`)
+}
+
+sayMyName('Wes');
+```
 
 ## DEFAULT FUNCTION ARGUMENTS
 

@@ -12,7 +12,13 @@
 # Tools
 * [Run Marked2 from the Command Line](http://jblevins.org/log/marked-2-command)
 
+# Brew, Nvm, Node
+http://lexsheehan.blogspot.com/2015/04/cleanly-install-nvm-node-and-npm.html
+
 # Dev Tool Tips
+
+### Tips video
+[JS guy video - Chrom dev console](http://www.thatjsdude.com/jsConcepts/concepts/console.html)
 
 ### In code
 * Insert 'debugger;' into your code.
@@ -81,3 +87,107 @@
 * http://jankfree.org
 * https://developers.google.com/web/tools/chrome-devtools/
 
+# Vim Resources
+* https://vimgifs.com/
+* http://vim-adventures.com/
+
+# Server Management
+
+### Command-line tips
+* cat - view file contents
+* cat key.pub | pbcopy (puts it into clipboard)
+* less - view file contents
+* nslookup mnmm.co
+
+### Key Management (OSX)
+
+* Navigate to the ssh folder:
+    * cd ~/.ssh
+    * ssh-keygen -t rsa
+* Do NOT leave the name default - change the name to something relevant to the project.
+    * my_key (use underscore) 
+* Alway give the PUBLIC KEY, NOT the PRIVATE key.  Public keys end with .pub.
+
+### Running a server on Digital Ocean, or elsewhere with similar features
+Login:
+
+* `ssh -i ~/.ssh/fem_digitalocean kenny@159.203.235.61` - logging in using the SSH key.
+* Using your password: `ssh kenny@159.203.235.61`
+* `less known_host file` (inside .ssh) shows the places and fingerprints.
+* `top` runs activity/process monitor. `q` to quit.
+* `apt-get install htop` - install prettier version of top.
+*
+#### Setup the server
+* `apt-get update` - update software
+* `apt-get upgrade` - install the updates
+* `add $USERNAME` - create a new user. Never run as root. Default: `kenny`
+* `usermod -aG sudo kenny` - add user `kenny` to sudo group
+* `su kenny` - switch to user `kenny`
+* `cat /var/log/auth.log` - test for access. Default access should be denied.
+* If need access use `sudo`. Use `sudo!!` to replay the previous command in sudo.
+
+#### Really setup the server
+Use the SSH key rather than passwords.
+* `cat fem_digitalocean.pub | ssh kenny@159.203.235.61 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"`
+    * get the public key
+    * ssh into the server
+    * create the .ssh directory
+    * get the key an put it into authorized keys
+*  Disable root login
+    * `sudo vi /etc/ssh/sshd_config`
+    * `PermitRootLogin no`
+    * `sudo service sshd restart`
+
+* Install nginx
+    * sudo apt install nginx
+    * sudo service nginx start
+    * sudo less /etc/nginx/sites-available/default 
+
+* sudo apt install git
+* sudo apt install nodejs npm
+* nodejs --version
+* sudo ln -s /usr/bin/nodejs /usr/bin/node - symlink nodejs to node
+* node --version
+* sudo mkdir -p /var/www/ - make a web directory if doesn't exist
+* sudo chown -R $USER:$USER /var/www
+* git clone https://github.com/young/Dev-Ops-for-Frontend.git
+* mv Dev-Ops-for-Frontend/ app/
+* cd app/
+
+Install NPM
+* npm i - install npm packages from package.json
+* node app.js - run the app
+
+#### Configure Nginx
+sudo vi /etc/nginx/sites-available/default
+Modify this block
+`location / {
+    proxy_pass http://127.0.0.1:3001/;
+}`
+Restart nginx: `sudo service nginx restart`
+Start express server: `node app.js`
+
+Install gulp - `npm i -g gulp`
+It will break - fix permissions
+`sudo mkdir -p /usr/local/lib/node_modules`
+https://docs.npmjs.com/getting-started/fixing-npm-permissions
+
+#### Keep Processes Running - Run Forever
+* pwd // /var/www/app
+* `npm i -g forever`
+* `forever start app.js` - start app.js
+* `forever stopall` - start all
+* Log forever - `sudo mkdir -p /var/log/forever`
+* Change owner to current user - `sudo chown -R $USER /var/log/forever`
+* Start logging - `forever start app.js >> /var/log/forever/forever.log`
+
+#### Tail a log - See the end of file in realtime
+* `sudo tail -f /var/log/auth.log`
+* Above is cool to watch logging in requests.
+
+#### Scripts to deploy
+Inside package.json
+"scripts": {
+  "deploy": "gulp build && forever stopall & forever start app.js >> /var/log/forever/forever.log"
+},
+* Run the deploy gulp: `npm run deploy`
