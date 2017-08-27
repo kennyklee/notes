@@ -1,9 +1,11 @@
 # Table of Contents
-* [JavaScript: Arrays](#js_arrays)
-* [JavaSCript: Helper Functions](#js_helper_functions)
+* [JavaScript: Array](#js_array_iterator_methods)
+* [JavaScript: Helper Functions](#js_helper_functions)
 * [JavaScript: ES6](#javascript_-_es6)
 
 # How to read source code
+(**from Gordon - Practial JavaScript)
+
 ### Why it’s important
 
 1. Most of your time will be spent reading, not writing.
@@ -68,21 +70,30 @@ In a function that's being called as a constructor, `this` points to the object 
 1. **Explicitly define `this`:**
 When you explicitly set the value of `this` manually using `bind`, `apply`, or `call`, it's all up to you.
 
+# 2 Things to Remember about Closure, Lexical Scope, aka: covered over variable environment (COVE), backpack.
+
+1. Functions can always remember the variable that they could see at creation.
+
+2. Variables are local scope and the scope of the enclosing function.
+
 # JS: Array Iterator Methods
 
-```c
-var test = function() {};
-asdf
-// wow pretty cool.
-```
-
-```c
+```javascript
 var array = [1,2,3,4];
+
 // ADD & REMOVE
 array.push(5); // [1,2,3,4,5]
 array.pop(); // [1,2,3]
 array.shift(); // [2,3,4];
 array.unshift('new'); // ['new',1,2,3,4];
+
+// 'pop' and 'push' affect the last item in an array.
+// 'shift' and 'unshift' change the first item in an array.
+// This means that the indexes of any subsequent array items have to be adjusted.
+// Therefore, 'push' and 'pop' are significantly fast operations than 'shift' and 'unshift'.
+
+delete array[1]; // [1, undefined, 3, 4]
+// delete creates a hole in the array
 
 // POSITION
 array.indexOf('new'); // 0
@@ -499,19 +510,19 @@ function unique(array) {
 * It's more legible.  Easy to eye/see/understand which variables change, and which don't.
 * `let` and `const` are block scoped.  Different than ES5.
 
-```c
+```javascript
 if  (x > 0){
   let y;
-  let const;
+  const z;
 }
-<!-- cannot access `let` or `const` -->
+console.log(y, z); //cannot access `let` or `const`
 ```
 
 * `constant` is immutable.  Cannot be reassigned once defined.  However, the properties of `constant` can be changed.  e.g., `const person; person.age = '30';`
 * If need to completely make immutable, include properties, then use `const me = Object.freeze(person);`
 * This 1st code snippet won't work as expected.  Use the 2nd snippet with `let` to make it work.
 
-```c
+```javascript
 for(var i = 0; i < 10; i++) {
   console.log(i);
   setTimeout(function() {
@@ -528,8 +539,8 @@ for(let i = 0; i < 10; i++) {
     }, 1000)
 }
 ```
-* Hoisting difference:
-```c
+* Hoisting difference between 'var' and 'let';
+```javascript
 console.log(person);  undefined
 var person = 'Kenny';
 
