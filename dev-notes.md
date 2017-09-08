@@ -205,3 +205,5 @@ It was a little involved, but took about 30 mins.
 
 Right now, the font looks too bold, b/c the tool uses Medium weight. Trying to figure out if I can use the lighter weight.
 
+I FIGURED IT OUT and forked the project. https://github.com/kennyklee/operator-mono-book-lig
+
