@@ -191,3 +191,17 @@ Inside package.json
   "deploy": "gulp build && forever stopall & forever start app.js >> /var/log/forever/forever.log"
 },
 * Run the deploy gulp: `npm run deploy`
+
+#### VS Code
+I installed font 'Operator Mono', but was missing something called 'ligatures', which makes symbols pretty like: == and === and =>, etc.
+
+I had to do couple of things:
+Create new font using 'Operator Mono' to include 'ligatures' with this: https://github.com/kiliman/operator-mono-lig
+
+Then is VSCode, add this to my settings:
+`Add "editor.fontLigatures": true`
+
+It was a little involved, but took about 30 mins.
+
+Right now, the font looks too bold, b/c the tool uses Medium weight. Trying to figure out if I can use the lighter weight.
+
