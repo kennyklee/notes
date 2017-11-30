@@ -1,5 +1,16 @@
 # Dev Notes
 
+## iTerm Tips
+
+* z (frecent)
+* extract
+* pbcopy
+* zsh Autosuggestion
+* zsh Syntax Highlighting
+* !! re-runs the last command (careful!)
+* cd - back to last folder - this works with lots of commands like git checkout -
+* ⌘ + K to clear. ⌘ + R to clear but maintain scrollback
+
 ## Design Resources
 
 * [SVG Icons - https://thenounproject.com/](https://thenounproject.com/)

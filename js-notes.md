@@ -1,9 +1,11 @@
-# Table of Contents
+# JavaScript Notes
+
+## Table of Contents
 * [JavaScript: Array](#js_array_iterator_methods)
 * [JavaScript: Helper Functions](#js_helper_functions)
 * [JavaScript: ES6](#javascript_-_es6)
 
-# How to read source code
+## How to read source code
 (**from Gordon - Practial JavaScript)
 
 ### Why it’s important
@@ -42,19 +44,20 @@
 ### Unfamiliar concepts
 
 1. capture unfamiliar concepts
-2. don't waste time. figure out code later.
+1. don't waste time. figure out code later.
 
 
-###Useful links
+### Useful links
 
-1. https://github.com/tastejs/todomvc/blob/master/app-spec.md
+1. <https://github.com/tastejs/todomvc/blob/master/app-spec.md>
 
 ### Notes
 
 1. Capture notes.
-2. More notes.
+1. More notes.
 
-# JS: 'this' keyword
+## JS: 'this' keyword
+
 1. **Default:**
 In a regular function, `this` points to the `window` object.
 
@@ -65,18 +68,144 @@ In a regular function, `this` points to the `window` object.
 In a callback function, assume the default case unless the outer function explicitly sets `this` (see the last rule).
 
 1. **Constructors:**
-In a function that's being called as a constructor, `this` points to the object that the constructor will create and return.
+In a function that's being called as a constructor using the `new` keyword, `this` points to the object that the constructor will create and return.
 
 1. **Explicitly define `this`:**
 When you explicitly set the value of `this` manually using `bind`, `apply`, or `call`, it's all up to you.
 
-# 2 Things to Remember about Closure, Lexical Scope, aka: covered over variable environment (COVE), backpack.
+## `Call` keyword
+`Function.call` allows us to set the this value of a function manually. Instead of simply calling a function like `fn()`, we use `fn.call(param)`, passing in the object we want this to equal as the parameter.
+
+`call` also allows us to pass in parameters to the function being called. Anything given after the object to be bound to `this` will be passed along to the function.
+
+Inside every function, JavaScript gives us access to the `arguments` object. This is an array-like object that contains the `arguments` passed in to the function, indexed.
+
+```javascript
+function add() {
+    console.log(arguments);
+}
+
+add(4); // -> { '0': 4 }
+add(4, 5); // -> { '0': 4, '1': 5 }
+add(4, 5, 6); // -> { '0': 4, '1': 5, '2': 6 }
+```
+
+`Array.slice` internally creates a copy of the original array by referencing `this`. By calling `Array.slice` on our `arguments` object, we are returned a new, true array, created from `arguments`.
+
+```javascript
+function add() {
+    var args = [].slice.call(arguments);
+    console.log(args);
+}
+```
+
+add(4, 5, 6); // -> [ 4, 5, 6 ]
+```
+
+## `Apply` keyword
+
+`Function.apply` works the same exact way as `call`, except instead of passing in arguments one by one, we pass in an array of arguments that gets spread into the function.
+
+```
+Note that the only difference when using apply is seen on line 14 above. The arguments to logThisAndArguments.apply, after obj, are inside an array.
+
+```javascript
+logThisAndArguments(['First arg', 'Second arg']);
+// -> { val: 'Hello!' }
+// -> First arg
+// -> Second arg
+```
+
+## `Bind` keyword
+
+`Function.bind` works differently than the other two. Similarly to `call`, it takes in a `this` value and as many more parameters as we’d like to give it, and it’ll pass those extra parameters to the function being called.
+
+However, instead of calling the function immediately, `bind` returns a new function. This new function has the `this` value and the parameters already set and bound. When it’s invoked, it’ll be invoked with those items already in place.
+
+Here is `call`, `apply`, `bind` all together.
+
+```javascript
+function logThisAndArguments(arg1, arg2) {
+    console.log(this);
+    console.log(arg1);
+    console.log(arg2);
+}
+
+var obj = { val: 'Hello!' };
+
+// NORMAL FUNCTION CALL
+logThisAndArguments('First arg', 'Second arg');
+// -> Window {frames: Window, postMessage: ƒ, …}
+// -> First arg
+// -> Second arg
+
+// USING CALL
+logThisAndArguments.call(obj, 'First arg', 'Second arg');
+// -> { val: 'Hello!' }
+// -> First arg
+// -> Second arg
+
+// USING APPLY
+logThisAndArguments.apply(obj, ['First arg', 'Second arg']);
+// -> { val: 'Hello!' }
+// -> First arg
+// -> Second arg
+
+// USING BIND
+var fnBound = logThisAndArguments.bind(obj, 'First arg', 'Second arg');
+fnBound();
+// -> { val: 'Hello!' }
+// -> First arg
+// -> Second arg
+```
+
+## Two (2) Things to Remember about Closure, Lexical Scope, aka: covered over variable environment (COVE), backpack.
 
 1. Functions can always remember the variable that they could see at creation.
 
-2. Variables are local scope and the scope of the enclosing function.
+1. Variables are local scope and the scope of the enclosing function.
 
-# JS: Array Iterator Methods
+## Rules to 'new' keyword
+
+Let’s break it down. `new`:
+
+1. Creates a new object and binds it to the `this` keyword.
+
+1. Sets the object’s internal prototype-inheritance property, `__proto__`, to be the `prototype` of the constructing function. This also makes it so the constructor of the new object is prototypically inherited.
+
+1. Sets up logic such that if a variable of any type other than object, array, or function is returned in the function body, return `this`, the newly constructed object, instead of what the function says to return.
+
+1. At the end of the function, returns `this` if there is no return statement in the function body.
+
+Sample code:
+```javascript
+function Demo() {
+    console.log(this);
+    this.value = 5;
+    return 10;
+}
+
+/*1*/ var demo = new Demo(); // -> Demo {}
+/*2*/ console.log(demo.__proto__ === Demo.prototype); // -> true
+/*3*/ console.log(demo); // -> Demo { value: 5 }
+
+function SecondDemo() {
+    this.val = '2nd demo';
+}
+
+/*4*/ console.log(new SecondDemo()); // -> SecondDemo { val: '2nd demo' }
+```
+
+## Object Prototype
+
+* We have access to `Function`, `Object`, and `Array`, three native JavaScript constructors
+* All normally created objects have a `__proto__` property which should not be tampered with
+* The `__proto__` property is used by the engine to perform property lookup
+* `hasOwnProperty` can help reveal whether an object owns the property being used, or whether the property belongs further up the `__proto__` chain
+* `Object.getOwnPropertyNames` returns an array of an object’s own property keys
+* `getPrototypeOf` and `setPrototypeOf` provide safer ways to interact with an object’s `__proto__` property
+
+## JS: Array Iterator Methods
 
 ```javascript
 var array = [1,2,3,4];
@@ -117,12 +246,13 @@ array.concat(newArray); // ['old',1,2,3,4,'join','me']
 array.join('-'); // old-1-2-3-4
 ```
 
-# JS: Helper functions
+## JS: Helper functions
 
 ### Open questions:
-* What is the difference between 'forEach' and 'map'?
-    * forEach typically modifies existing array/object. Map creates a new one.
-    * Map is typically used to pluck properties from existing arrays/objects.
+* What is the difference between `forEach` and `map`?
+    * `forEach` typically modifies existing array/object. `Map` and `filter` creates a new array/object and typically used for functional programming (pure functions that doesn't affect outer scope).
+    * Using `forEach` shows intention that you will be affecting outer scope.
+    * `Map` is typically used to pluck properties from existing arrays/objects.
 
 ### "forEach" function
 * Can replace the "for" loop.
@@ -499,16 +629,19 @@ function unique(array) {
 
 ```
 
-# JavaScript - ES6
+## JavaScript - ES6
 
-## LET & CONSTANT
+### LET & CONSTANT
+
 #### When to use `var` vs `let` vs `const`
+
 * use `const` by default
 * only use `let` if rebinding is needed
-* `var` shouldn't be used in ES6
-
+* `var` shouldn't be used in ES6.
 * It's more legible.  Easy to eye/see/understand which variables change, and which don't.
-* `let` and `const` are block scoped.  Different than ES5.
+* `var` is function scooped.
+* `let` and `const` are block scoped.  No IFFEs are required. Different than ES5.
+* `let` and `const` are NOT hoisted. `var` is hoisted.
 
 ```javascript
 if  (x > 0){
@@ -549,17 +682,20 @@ let person2 = 'Kenny';  same with `const`
 ```
 
 ## Temporal Dead Zone
+
 * `var` is hoisted to the top
 * `let` and `cost` are not hoisted above the function that calls them. Calling them before they are defined is called the 'temporal dead zone'.
 
 ## TEMPLATE STRINGS
+
 * Wrap in backticks \` blah blah \`
 * Variables are in ${var}, instead of the plus (+) to concatenate.
 * **OLD:** "This is " + var1 + "and this is " + var2;
 * **NEW:** \`This is ${var1} and this is ${var2}\`
 
 ## ARROW FUNCTIONS (Syntatic sugar)
-#### Fat arrow functions
+
+### Fat arrow functions
 
 ```c
 // ES5
@@ -624,7 +760,45 @@ const sayMyName = (name) => {
 sayMyName('Wes');
 ```
 
-## DEFAULT FUNCTION ARGUMENTS
+### DEFAULT FUNCTION ARGUMENTS
+
+```js
+function fn(param = "Default value") {
+    console.log(param);
+}
+
+fn('String passed in'); // -> String passed in
+fn(); // -> Default value
+```
+
+function as param
+```js
+function fn(param = 10 * 10) {
+    console.log(param);
+    return param;
+}
+
+function fn2(param = fn(50)) {
+    console.log(param);
+}
+
+fn('String passed in'); // -> String passed in
+fn(); // -> 100
+
+fn2(); // -> 50
+       // -> 50
+```
+
+variable availibility
+```js
+function add(param1 = 10, param2 = param1) {
+    console.log(param1 + param2);
+}
+
+add(2, 5); // -> 7
+add(2); // -> 4
+add(); // -> 20
+```
 
 ```c
 function ajaxRequest(url, method = 'GET') {
@@ -636,7 +810,7 @@ ajaxRequest('google.com', undefined); // method is 'GET'
 ajaxRequest('google.com', 'POST'); // method is 'POST'
 ```
 
-## REST & SPREAD OPERATOR
+### REST & SPREAD OPERATOR
 
 ```c
 // REST OPERATOR
@@ -677,10 +851,9 @@ const MathLibrary = {
 }
 
 MathLibrary.calculateProduct(2, 3);
-
 ```
 
-## DESTRUCTURING
+### DESTRUCTURING
 
 ```c
 var expense = {
@@ -726,7 +899,7 @@ const companies = {
 const [{ location }] = companies; //'Mountain View'
 ```
 
-####Real-life examples
+### Real-life examples
 
 ```c
 // Destructured and the ORDER of arguments do not matter anymore.
@@ -786,7 +959,8 @@ const classesAsObject = classes.map(([subject, time, teacher]) => ({subject, tim
 ```
 
 ## CLASSES
-####ES5 Example
+
+### ES5 Example
 
 ```c
 function Car(options) {
@@ -815,7 +989,7 @@ console.log(toyota.drive());
 console.log(toyota.honk());
 ```
 
-####ES6 Example
+### ES6 Example
 
 ```c
 class Car {
@@ -846,12 +1020,13 @@ const toyota = new Toyota({ color: 'red' });
 console.log(toyota.honk());
 console.log(toyota.drive());
 console.log(toyota);
-
 ```
 
 ## GENERATORS
+
 Functions where we can enter and exit multiple times.
 When you declare a function, we use the star.
+
 ```c
 function* shopping() {
   // stuff on the sidewalk
@@ -1071,13 +1246,14 @@ console.log(values);
 ```
 
 ## PROMISES
+
 3 states
 
 * pending/unresolved (status)
 * resolve (status)
-    * then (callback)
+  * then (callback)
 * reject (status)
-    * catch (callback)
+  * catch (callback)
 
 ```c
 promise = new Promise((resolve, reject) => {
@@ -1100,7 +1276,7 @@ promise
     .catch(() => console.log('uh oh!!')) // only runs on reject();
 ```
 
-#### Most common use case with 'fetch'
+### Most common use case with 'fetch'
 
 ```c
 url = 'https://jsonplaceholder.typicode.com/posts/';
@@ -1119,3 +1295,31 @@ fetch(url)
 
 // User Axios, SuperAgent
 ```
+
+## Advanced JS
+
+See here for details <https://www.educative.io/collection/page/5679346740101120/5707702298738688/5756596743307264>
+
+* Set - A set is a collection of values. Think of it like a bucket. A set provides easy ways to insert and remove items. We can easily check if an item is present in our set and we can get all items back in a way that makes them easy to use.
+
+```js
+const set = new Set(['abc', 'def', 'ghi']);
+console.log(set); // -> Set { 'abc', 'def', 'ghi' }
+```
+
+* Map - Another new data structure introduced in ES2015 is the map. A map is essentially an enhanced object. It stores key-value pairs, just like an object. However, while an object’s key can only be a string, a map’s key can be any data type. We can use an object as a key if we like.  Again, when we insert an object as a key, only that unique object is inserted. Testing for an identical but unique object will fail.
+
+```js
+const map = new Map([
+    [1, 'abc'],
+    [null, 'def'],
+    [{}, 'ghi']
+]);
+
+console.log(map);
+// -> Map { 1 => 'abc', null => 'def', {} => 'ghi' }
+```
+
+* Symbols - used as keys in objects (ES2015 can use either strings or symbols as keys). Symbols anonymous and when always comparing symbols `==` or `===`, it's always `false`.
+* Iterables & Iterators
+* Generators
