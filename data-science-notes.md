@@ -1,6 +1,22 @@
 # Data Science (Python & SQL)
 
+## Jupyer Notes
+```
+# start jupyter
+jupyter notebook
+```
+
 ## Pandas
+
+### Load Datasets
+
+``` python
+# load datasets
+import pandas as pd
+
+df_08 = pd.read_csv('data_08.csv')
+df_18 = pd.read_csv('data_18.csv')
+```
 
 ### Poke Around
 ``` python
@@ -16,7 +32,7 @@ df.info()  # show missing values
 df.nunique() # unique values in columns
 df.describe() # default stats.
 
-### Advanced ###
+### Advanced: get location ###
 df.iloc[196:, 1:].sum().plot(kind='bar'); # index location
 
 # average sales
@@ -57,6 +73,15 @@ df_m = df.query('diagnosis == "M"')
 # selecting records of people making over $50K
 df_a = df[df['income'] == ' >50K']
 df_a = df.query('income == " >50K"')
+
+# query Null values
+df.isnull().sum()
+
+# checks if any of columns in 2008 have null values - should print False
+df.isnull().sum().any()
+
+# value counts
+df['cyl'].value_counts()
 ```
 
 #### Index
@@ -87,12 +112,37 @@ sum(df.duplicated())
 df.drop_duplicates(inplace=True)
 df # see data
 sum(df.duplicated()) # check to see dups were removed.
+
+#convert data types
+df['B'].astype(int)
+# extract numbers and type
+df['B'].str.extract('(\d+)').astype(int)
 ```
 
 #### Rename Columns (pandas)
 
 ``` python
 df.rename(columns = {'old column':'new_column'}, inplace = True)
+
+# rename but preserving the first 10 characters.
+df_08.rename(columns=lambda x: x[:10] + "_2008", inplace=True)
+```
+
+#### Merge Datasets
+
+``` python
+# merge datasets
+df_combined = df_08.merge(df_18, left_on='model_2008', right_on='model', how='inner')
+```
+
+#### Replace Characters (Spaces with Underscores)
+
+``` python
+# replace spaces with underscores and lowercase labels for 2008 dataset
+df_08.rename(columns=lambda x: x.strip().lower().replace(" ", "_"), inplace=True)
+
+# confirm changes
+df_08.head(1)
 ```
 
 #### Mass Rename Columns
@@ -151,6 +201,20 @@ pd.plotting.scatter_matrix(df, figsize=(15,15));
 
 # Plot relationships (x, y values)
 df.plot(x='Energy Output', y='Average Temperature', kind='scatter');
+
+# Compare 2 datasets / tables
+# how many unique models used alternative sources of fuel in 2008
+alt_08 = df_08.query('fuel in ["CNG", "ethanol"]').model.nunique()
+alt_08
+
+# how many unique models used alternative sources of fuel in 2018
+alt_18 = df_18.query('fuel in ["Ethanol", "Electricity"]').model.nunique()
+alt_18
+
+plt.bar(["2008", "2018"], [alt_08, alt_18])
+plt.title("Number of Unique Models Using Alternative Fuels")
+plt.xlabel("Year")
+plt.ylabel("Number of Unique Models");
 ```
 
 ### Communicate (make pretty)
@@ -289,3 +353,75 @@ wine_df = red_df.append(white_df)
 # save data
 wine_df.to_csv('winequality_edited.csv', index=False)
 ```
+
+## SQL
+
+### Select NULL
+
+``` sql
+    SELECT *
+        FROM demo.accouts
+        WHERE primary_poc IS NULL
+    
+    SELECT *
+        FROM demo.accouts
+        WHERE primary_poc IS NOT NULL
+```
+
+### Difference between WHERE and HAVING
+
+* WHERE subsets the returned data based on a logical condition.
+* WHERE appears after the FROM, JOIN, and ON clauses, but before GROUP BY.
+* HAVING appears after the GROUP BY clause, but before the ORDER BY clause.
+* HAVING is like WHERE, but it works on logical statements involving aggregations.
+
+### GROUPBY Example
+
+``` sql
+SELECT s.id, s.name, COUNT(*) num_accounts
+    FROM accounts a
+    JOIN sales_reps s
+    ON s.id = a.sales_rep_id
+    GROUP BY s.id, s.name
+    HAVING COUNT(*) > 5
+    ORDER BY num_accounts;
+```
+
+### COUNT Select queries
+
+``` sql
+SELECT COUNT(*) num_accounts
+    FROM (SELECT a.id, a.name, COUNT(*) num_orders
+    FROM accounts a
+    JOIN orders o
+    ON a.id = o.account_id
+    GROUP BY a.id, a.name
+    HAVING COUNT(*) > 20
+    ORDER BY num_orders;) AS Table2;
+```
+
+How many of the sales reps have more than 5 accounts that they manage?
+How many accounts have more than 20 orders?
+Which account has the most orders?
+How many accounts spent more than 30,000 usd total across all orders?
+How many accounts spent less than 1,000 usd total across all orders?
+Which account has spent the most with us?
+Which account has spent the least with us?
+Which accounts used facebook as a channel to contact customers more than 6 times?
+Which account used facebook most as a channel?
+Which channel was most frequently used by most accounts?
+
+SELECT a.name, COUNT(*) count_of_orders
+    FROM accounts a
+    JOIN orders o
+    ON o.account_id = a.id
+    GROUP BY a.name
+    ORDER BY count_of_orders
+
+SELECT a.id, a.name, COUNT(*) num_orders
+FROM accounts a
+JOIN orders o
+ON a.id = o.account_id
+GROUP BY a.id, a.name
+ORDER BY num_orders DESC
+LIMIT 1;
