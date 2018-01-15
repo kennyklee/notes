@@ -400,6 +400,43 @@ SELECT COUNT(*) num_accounts
     ORDER BY num_orders;) AS Table2;
 ```
 
+### Subqueries w/ DATE TRUNCATION
+
+```sql
+SELECT channel,
+    AVG(event_count) AS avg_event_count
+FROM
+(SELECT DATE_TRUNC('day', occurred_at) AS day,
+    channel,
+    COUNT(*) AS event_count
+    FROM demo.web_events_full
+    GROUP BY 1,2
+) sub
+    GROUP BY 1
+    ORDER BY 2 DESC;
+
+/* DATE_PART() finds month or week or day number */
+```
+
+### Data Cleaning / Manipulation
+
+* LEFT / RIGHT
+* POSITION, STRPOS, UPPER, LOWER
+* CONCAT or ||
+* CAST - change columns from one data type to another (shorthand is ::date)
+* TRIM - remove char from beginning and end
+* COALESCE (passes no non-null value)
+* More... https://community.modeanalytics.com/sql/tutorial/sql-string-functions-for-cleaning/
+* More more... https://www.w3schools.com/sql/sql_isnull.asp
+
+### SQL - window functions
+* OVER / PARTITION BY
+* RANK()
+
+
+
+
+
 How many of the sales reps have more than 5 accounts that they manage?
 How many accounts have more than 20 orders?
 Which account has the most orders?
