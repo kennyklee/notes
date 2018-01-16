@@ -366,7 +366,38 @@ wine_df.to_csv('winequality_edited.csv', index=False)
     SELECT *
         FROM demo.accouts
         WHERE primary_poc IS NOT NULL
+
+    /* RETURN UNMATCH ROWS*/
+    WHERE Table_A.column_name IS NULL OR Table_B.column_name IS NULL
 ```
+
+### JOINS
+
+``` sql
+SELECT column_name(s)
+FROM Table_A
+INNER JOIN Table_B ON Table_A.column_name = Table_B.column_name;
+
+SELECT column_name(s)
+FROM Table_A
+LEFT JOIN Table_B ON Table_A.column_name = Table_B.column_name;
+
+SELECT column_name(s)
+FROM Table_A
+RIGHT JOIN Table_B ON Table_A.column_name = Table_B.column_name;
+
+SELECT column_name(s)
+FROM Table_A
+FULL OUTER JOIN Table_B ON Table_A.column_name = Table_B.column_name; /* Same as FULL JOIN */
+
+```
+
+* UNION vs UNION ALL (UNION drops the same matching records...UNION ALL appends all rows.)
+* SQL's two strict rules for appending data:
+
+Both tables must have the same number of columns.
+Those columns must have the same data types in the same order as the first table.
+A common misconception is that column names have to be the same. Column names, in fact, don't need to be the same to append two tables but you will find that they typically are.
 
 ### Difference between WHERE and HAVING
 
@@ -430,35 +461,65 @@ FROM
 * More more... https://www.w3schools.com/sql/sql_isnull.asp
 
 ### SQL - window functions
-* OVER / PARTITION BY
+
+* OVER / PARTITION BY (always need ORDERED BY)
 * RANK()
+* DENSE_RANK()
+* LAG
+* LEAD
+* NTILE
 
+### OVER / PARTITION (Window Function)
 
+``` sql
+SELECT standard_amt_usd,
+    SUM(standard_amt_usd) OVER (ORDER BY occurred_at) AS running_total
+    FROM orders
 
+SELECT standard_amt_usd,
+    DATE_TRUNC('month', occurred_at) AS month,
+    SUM(standard_amt_usd) OVER (PARTITION BY DATE_TRUNC('month', occurred_at) ORDER BY occurred_at) AS running_total
+    FROM orders
+```
 
+### More Window function
 
-How many of the sales reps have more than 5 accounts that they manage?
-How many accounts have more than 20 orders?
-Which account has the most orders?
-How many accounts spent more than 30,000 usd total across all orders?
-How many accounts spent less than 1,000 usd total across all orders?
-Which account has spent the most with us?
-Which account has spent the least with us?
-Which accounts used facebook as a channel to contact customers more than 6 times?
-Which account used facebook most as a channel?
-Which channel was most frequently used by most accounts?
+``` sql
+SELECT id,
+       account_id,
+       DATE_TRUNC('year',occurred_at) AS year,
+       DENSE_RANK() OVER account_year_window AS dense_rank,
+       total_amt_usd,
+       SUM(total_amt_usd) OVER account_year_window AS sum_total_amt_usd,
+       COUNT(total_amt_usd) OVER account_year_window AS count_total_amt_usd,
+       AVG(total_amt_usd) OVER account_year_window AS avg_total_amt_usd,
+       MIN(total_amt_usd) OVER account_year_window AS min_total_amt_usd,
+       MAX(total_amt_usd) OVER account_year_window AS max_total_amt_usd
+FROM orders
+WINDOW account_year_window AS (PARTITION BY account_id ORDER BY DATE_TRUNC('year',occurred_at))
 
-SELECT a.name, COUNT(*) count_of_orders
-    FROM accounts a
-    JOIN orders o
-    ON o.account_id = a.id
-    GROUP BY a.name
-    ORDER BY count_of_orders
+SELECT occurred_at,
+       total_sum,
+       LEAD(total_sum) OVER (ORDER BY occurred_at) AS lead,
+       LEAD(total_sum) OVER (ORDER BY occurred_at) - total_sum AS lead_difference
+FROM (
+SELECT occurred_at,
+       SUM(total_amt_usd) AS total_sum
+  FROM orders
+ GROUP BY 1
+ ) sub
 
-SELECT a.id, a.name, COUNT(*) num_orders
-FROM accounts a
-JOIN orders o
-ON a.id = o.account_id
-GROUP BY a.id, a.name
-ORDER BY num_orders DESC
-LIMIT 1;
+ SELECT account_id,
+		occurred_at,
+        standard_qty,
+        NTILE(4) OVER (ORDER BY standard_qty) AS standard_quarttile,
+        NTILE(2) OVER (ORDER BY standard_qty) AS gloss_half,
+        NTILE(100) OVER (ORDER BY standard_qty) AS total_percentile
+FROM orders
+ORDER BY account_id DESC  
+```
+
+### PERFORMANCE
+
+* Use 'EXPLAIN' to see how much a query costs.
+* Use sub-queries to pre-aggregate to make the join queries smaller.
