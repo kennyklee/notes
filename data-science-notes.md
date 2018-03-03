@@ -1,5 +1,11 @@
 # Data Science (Python & SQL)
 
+## Data Wrangling
+
+70% of a data scientist time is spend on data wrangling. Only after data is cleaned does it make sense to begin the analysis.
+
+Data -> Gathering -> Extracting -> Cleaning -> Storing -> Analysis
+
 ## Jupyer Notes
 ```
 # start jupyter
@@ -18,6 +24,80 @@ df_08 = pd.read_csv('data_08.csv')
 df_18 = pd.read_csv('data_18.csv')
 ```
 
+### Setup Data
+
+``` python
+# Subway ridership for 5 stations on 10 different days
+ridership_df = df(
+    data=[[   0,    0,    2,    5,    0],
+          [1478, 3877, 3674, 2328, 2539],
+          [1613, 4088, 3991, 6461, 2691],
+          [1560, 3392, 3826, 4787, 2613],
+          [1608, 4802, 3932, 4477, 2705],
+          [1576, 3933, 3909, 4979, 2685],
+          [  95,  229,  255,  496,  201],
+          [   2,    0,    1,   27,    0],
+          [1438, 3785, 3589, 4174, 2215],
+          [1342, 4043, 4009, 4665, 3033]],
+    index=['05-01-11', '05-02-11', '05-03-11', '05-04-11', '05-05-11',
+           '05-06-11', '05-07-11', '05-08-11', '05-09-11', '05-10-11'],
+    columns=['R003', 'R004', 'R005', 'R006', 'R007']
+)
+
+# Change False to True for each block of code to see what it does
+
+# DataFrame creation
+if True:
+    # You can create a DataFrame out of a dictionary mapping column names to values
+    df_1 = pd.DataFrame({'A': [0, 1, 2], 'B': [3, 4, 5]})
+    print df_1
+
+    #    A  B
+    # 0  0  3
+    # 1  1  4
+    # 2  2  5
+
+    # You can also use a list of lists or a 2D NumPy array
+    df_2 = pd.DataFrame([[0, 1, 2], [3, 4, 5]], columns=['A', 'B', 'C'])
+    print df_2
+
+    #    A  B  C
+    # 0  0  1  2
+    # 1  3  4  5
+
+    # Adding DataFrames with overlapping row indexes
+    df1 = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]},
+                       index=['row1', 'row2', 'row3'])
+    df2 = pd.DataFrame({'a': [10, 20, 30], 'b': [40, 50, 60], 'c': [70, 80, 90]},
+                       index=['row4', 'row3', 'row2'])
+    print df1 + df2
+
+    #       a     b     c
+    # row1  NaN   NaN   NaN
+    # row2  32.0  65.0  98.0
+    # row3  23.0  56.0  89.0
+    # row4  NaN   NaN   NaN
+
+# Accessing elements
+if True:
+    print ridership_df.iloc[0] # single row
+    print ridership_df.iloc[0:4] # multiple rows
+    print ridership_df.loc['05-05-11'] # row index
+    print ridership_df['R003'] # column index
+    print ridership_df[['R003', 'R005']] # multiple columns
+    print ridership_df.iloc[1, 3] # single value, row, column
+
+df = pd.DataFrame({'A': [0, 1, 2], 'B': [3, 4, 5]})
+    print df.sum() # vertial sum, same as 'axis=0'
+        # A 3
+        # B 12
+    print df.sum(axis=1) # horizontal sum
+        # 0 3
+        # 1 5
+        # 2 7
+    print df.values.sum() # sum of all values (without row/column headers)
+```
+
 ### Poke Around
 ``` python
 import pandas as pd
@@ -26,11 +106,11 @@ df = pd.read_csv('winequality-red.csv', sep=';') # use a separater or delimiter.
 df.head()  # header & top 5 rows
 df.head(10) # top 10
 df.tail(10) # bottom 10 - default 5
+df.describe() # default stats.
 df.shape   # number of rows & columns
 df.dtypes  # data types of columns
 df.info()  # show missing values
 df.nunique() # unique values in columns
-df.describe() # default stats.
 
 ### Advanced: get location ###
 df.iloc[196:, 1:].sum().plot(kind='bar'); # index location
