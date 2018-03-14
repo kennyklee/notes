@@ -11,6 +11,25 @@
 * cd - back to last folder - this works with lots of commands like git checkout -
 * ⌘ + K to clear. ⌘ + R to clear but maintain scrollback
 
+## Terminal Tips
+
+``` bash
+| # pipes, joins commands together
+
+cat fileName # Outputs file contents
+
+wc #word count
+wc -l #line
+wc -w #words
+wc -c #characters
+
+cat dev-notes.md | grep get -n # line number of the result
+
+pbcopy - copy into paste
+
+cat freezing.log | egrep '^\s+RT @' | sort | uniq -c | sort -nr | less # What does this do?
+```
+
 ## Design Resources
 
 * [SVG Icons - https://thenounproject.com/](https://thenounproject.com/)
