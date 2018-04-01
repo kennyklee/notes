@@ -7,7 +7,8 @@
 Data -> Gathering -> Extracting -> Cleaning -> Storing -> Analysis
 
 ## Jupyer Notes
-```
+
+``` python
 # start jupyter
 jupyter notebook
 ```
@@ -96,6 +97,9 @@ df = pd.DataFrame({'A': [0, 1, 2], 'B': [3, 4, 5]})
         # 1 5
         # 2 7
     print df.values.sum() # sum of all values (without row/column headers)
+
+    # axis='columns' goes horizontal
+    # axis='index' goes vertical
 ```
 
 ### Poke Around
@@ -125,6 +129,39 @@ sales.iloc[0, 1:].plot(kind='bar');
 # sales for the lastest 3-month periods
 last_three_months = df[df['week'] >= '2017-12-01']
 last_three_months.iloc[:, 1:].sum().plot(kind='pie')
+```
+### Vectorized Operations
+Check out .shift() to add current value to the next value within the dataframe (df).
+
+### Apply vs Applymap
+applymap() applies the single data element;
+apply() applies to the entire index (vertical) or columns (horizontal).
+
+### How to find the 2nd largest value
+
+``` python
+import numpy as np
+import pandas as pd
+
+df = pd.DataFrame({
+    'a': [4, 5, 3, 1, 2],
+    'b': [20, 10, 40, 50, 30],
+    'c': [25, 20, 5, 15, 10]
+})
+
+def second_largest_column(df):
+    '''
+    Fill in this function to return the second-largest value of each 
+    column of the input DataFrame.
+    '''
+    return df.sort_values(ascending=False).iloc[1]
+
+# print second_largest(df['a'])
+
+def second_largest(df):
+    return df.apply(second_largest_column)
+
+print second_largest(df)
 ```
 
 ### Wrangle & Clean Data
@@ -256,8 +293,37 @@ df.mean() # default way
 df.groupby('column').mean() # kinda like left pivot rows
 df.groupby(['column1', 'column2']).mean() # multiple groupby
 df.groupby(['column1', 'column2'], as_index=False)['show_only_this_column'].mean() # show only specific columns
+```
 
+#### Pandas Qcut function (Quantile-based discretization function)
 
+``` python
+def convert_grades_curve(exam_grades):
+    # Pandas has a bult-in function that will perform this calculation
+    # This will give the bottom 0% to 10% of students the grade 'F',
+    # 10% to 20% the grade 'D', and so on. You can read more about
+    # the qcut() function here:
+    # http://pandas.pydata.org/pandas-docs/stable/generated/pandas.qcut.html
+    return pd.qcut(exam_grades,
+                    [0, 0.1, 0.2, 0.5, 0.8, 1],
+                    labels=['F', 'D', 'C', 'B', 'A'])
+
+# qcut() operates on a list, array, or Series. This is the
+# result of running the function on a single column of the
+# DataFrame.
+print convert_grades_curve(grades_df['exam1'])
+
+# qcut() does not work on DataFrames, but we can use apply()
+# to call the function on each column separately
+print grades_df.apply(convert_grades_curve)
+```
+
+#### Standard Deviation Example
+
+``` python
+
+def standardize_column(column):
+    return (column - column.mean()) / column.std()
 
 ```
 
