@@ -250,6 +250,7 @@ df_08.rename(columns=lambda x: x[:10] + "_2008", inplace=True)
 ``` python
 # merge datasets
 df_combined = df_08.merge(df_18, left_on='model_2008', right_on='model', how='inner')
+# Can choose 'left', 'right', 'outer', 'inner' for the 'how'
 ```
 
 #### Replace Characters (Spaces with Underscores)
