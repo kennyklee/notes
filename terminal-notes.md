@@ -2,6 +2,16 @@
 https://terminal.training/
 https://training.leftlogic.com/course/terminal/
 
+### Terminal files:
+https://remysharp.com/2013/07/25/my-terminal-setup
+
+### WIFI Crontab
+https://gist.github.com/remy/6079223#file-online-check-sh
+
+How to schedule crons using `chrontab`
+https://www.techradar.com/how-to/computing/apple/terminal-101-creating-cron-jobs-1305651
+
+
 ### TRLR
 http://tldr.sh/
 
@@ -18,6 +28,8 @@ http://tldr.sh/
 `which echo` tells where in the directory the file lives.
 
 `ponysay "Hello Kenny"` Gemfile app - just for fun.
+
+`which` locate a program file or alias.
 
 ### Homebrew
 
@@ -173,3 +185,35 @@ htop # better view
 
 uptime #shows uptime
 ```
+
+### Customize Terminal
+
+https://rem.io/terminal
+https://rem.io/dotfile
+https://rem.io/powerline
+
+`gist` create gist from paste buffer
+
+`gs` git status
+
+### Webdev / Tools
+
+Remy uses `curl` more than `wget`.
+
+rem.io/perf
+
+rem.io/wget-spider. Spider and get a website:
+`wget -r -l4 -spider -D remysharp.com https://remysharp.com`
+
+ngrok - expose localhost to the internet for testing.
+
+`ccat` - syntax highting for cat. Alias cat to ccat
+
+`json` - parse out data into json format.
+
+`awk '{ print $10 }'` split output into columns.
+https://training.leftlogic.com/course/terminal/play/cli-ch-plus-awk
+
+### Watch - cool for monitoring for changes.
+
+`watch -g -t --differences=permanent "curl -s https://somewebsite.com -I | grep X-Rate" && afplay /System/Library/Sounds/Hero.aiff
